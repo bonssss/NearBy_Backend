@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { pool } from "../db";
+import constants from "node:constants";
 
 export const createPlace = async (req: Request, res: Response) => {
   const { name, category, latitude, longitude } = req.body;
@@ -56,3 +57,8 @@ export const getNearbyPlaces = async (req: Request, res: Response) => {
   res.json(rows);
 };
 
+export  const getAllPlaces = async (req: Request, res: Response) => {
+  const query = `SELECT id, name, category, ST_X(location::geometry) AS longitude, ST_Y(location::geometry) AS latitude FROM places;`;
+  const { rows } = await pool.query(query);
+  res.json(rows);
+}
